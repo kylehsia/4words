@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh_tw"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>4words</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+
+        <style type="text/css">
+            .header {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width:  100%;
+                height: 20vh;
+                border-bottom: 2px solid blue;
+            }
+
+            .card {
+                font-size: 12px;
+                border: 2px solid purple;
+                padding: 10px;
+                border-radius: 5px;
+                margin: 20px;
+                display: inline-block;
+            }
+
+            .first, .second {
+                font-size: 16px;
+                color: blue;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div class="header">
+            <div>
+                如果... <input type="text" id="some-reason">, 我就... <input type="text" id="act"> <button class="btn-submit" id="btn-submit" onclick="setURL()">送出</button>
+            </div>
+        </div>
+        <div class="results">
+            <!-- <div class="card">
+                如果....
+                <div class="first">蔡英文檔選</div>
+                我就
+                <div class="second">請全台灣吃2300萬份雞排</div>
+            </div> -->
+        </div>
+
+        <iframe id="gform" style="display: none;"></iframe>
+        
+
+
+     
+        
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script>
+            // link to google form
+            function setURL(){
+                var A1 = document.getElementById('some-reason').value;
+                var A2 = document.getElementById('act').value;
+                document.getElementById('gform').src = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfzwJ1JkCfI-PXVYbkMUZKYmndN9D2KHYiCcJP9QFC2SXo-xw/formResponse?entry.1907484489=" + A1 + "&" + "entry.1628954902=" + A2;
+            }
+
+            //Action after click button
+            $(document).ready(function(){
+                $('.btn-submit').click(function(){
+                    // alert('資料已送出！');
+                    // $('#some-reason, #act').val('');
+                    location.reload();
+                });
+            });
+
+            //可以在console log 看到有沒有資料傳進來
+            $.ajax({
+                url: 'https://spreadsheets.google.com/feeds/list/1CORXuWSS1PDU-vzteop_mtM6i2TgV0_ciH4x8rR9XwY/1/public/values?alt=json',
+                method: 'GET',
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+
+            $(function() {
+                $.get('https://spreadsheets.google.com/feeds/list/1CORXuWSS1PDU-vzteop_mtM6i2TgV0_ciH4x8rR9XwY/1/public/values?alt=json', function(data) {
+                  var d = data.feed.entry;
+                  var items = [];
+                  for(var i in d) {
+                    var item = {};
+                    item.first = d[i].gsx$if.$t;
+                    item.second = d[i].gsx$ill.$t;
+                    items.push(item);
+                  }
+                  console.table(items);
+                  for(var i in items) {
+                    var Card = `
+                        <div class="card">
+                            如果....
+                            <div class="first">${items[i].first}</div>
+                            我就
+                            <div class="second">${items[i].second}</div>
+                        </div>
+                    `;
+                    $('.results').append(Card);
+                  }
+                });
+              });
+        </script>
+    </body>
+</html>
