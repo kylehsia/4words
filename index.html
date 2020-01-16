@@ -9,6 +9,7 @@
         <title>4words</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        <script src="https://kit.fontawesome.com/21f66b282d.js" crossorigin="anonymous"></script>
 
         <style type="text/css">
             .header {
@@ -72,18 +73,19 @@
                 $('.btn-submit').click(function(){
                     // alert('資料已送出！');
                     // $('#some-reason, #act').val('');
-                    location.reload();
+                    $('#btn-submit').html('<i class="fas fa-spinner fa-spin"></i>');
+                    setTimeout(location.reload.bind(location), 1500);
                 });
             });
 
             //可以在console log 看到有沒有資料傳進來
-            $.ajax({
-                url: 'https://spreadsheets.google.com/feeds/list/1CORXuWSS1PDU-vzteop_mtM6i2TgV0_ciH4x8rR9XwY/1/public/values?alt=json',
-                method: 'GET',
-                success: function (data) {
-                    console.log(data);
-                }
-            });
+            // $.ajax({
+            //     url: 'https://spreadsheets.google.com/feeds/list/1CORXuWSS1PDU-vzteop_mtM6i2TgV0_ciH4x8rR9XwY/1/public/values?alt=json',
+            //     method: 'GET',
+            //     success: function (data) {
+            //         console.log(data);
+            //     }
+            // });
 
             $(function() {
                 $.get('https://spreadsheets.google.com/feeds/list/1CORXuWSS1PDU-vzteop_mtM6i2TgV0_ciH4x8rR9XwY/1/public/values?alt=json', function(data) {
